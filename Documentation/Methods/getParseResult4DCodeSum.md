@@ -43,6 +43,7 @@ PLUS all tokenTypes which used from the method, 9 collections for 9 types:
 - `usedStr` ("StringsInDoubleQuotes")
 
 PLUS all callers of/for each projectMethod (Null/Collection)
+- `callers` (list of methods which called this project-method)
 
 ## Example
 ```4d
