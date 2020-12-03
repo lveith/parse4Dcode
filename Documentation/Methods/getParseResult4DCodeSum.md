@@ -26,12 +26,12 @@ Gets all method datas and metas from all kind of methods -->
 Gets all method datas and metas from all kind of methods.
 Uses js function parseGetTokens(src4dCode, typFilterList)
 
-Get for all kind of methods (Summary) the method datas:
+**Get for all kind of methods (Summary) the method datas:**
 - `path` (methodPathName)
 - `code` (methodSourceCode)
 - `mod` (modificationDateTime)
 
-PLUS all tokenTypes which used from the method, 9 collections for 9 types:
+**PLUS all tokenTypes which used from the method, 9 collections for 9 types:**
 - `usedPm` (ProjectMethod only directCalls, not StrInDoubleQuotes)
 - `usedCmd` (4D-Commands)
 - `usedCst` (4D-Constants)
@@ -42,7 +42,7 @@ PLUS all tokenTypes which used from the method, 9 collections for 9 types:
 - `usedBe` (BlockEnd Cmds)
 - `usedStr` ("StringsInDoubleQuotes")
 
-PLUS all callers of/for each projectMethod (Null/Collection)
+**PLUS all callers of/for each projectMethod (Null/Collection)**
 - `callers` (list of methods which called this project-method)
 
 ## Example
