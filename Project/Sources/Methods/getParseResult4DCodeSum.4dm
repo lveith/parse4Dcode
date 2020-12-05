@@ -15,22 +15,25 @@
 // - usedStr ("StringsInDoubleQuotes")
 // PLUS all callers of/for each projectMethod (Null/Collection)
 // Uses js: function parseGetTokens(src4dCode, typFilterList)
-// Last change: LV 14.09.2020, 09:30:00
+// Last change: LV 05.12.2020, 11:30:00
 
-C_COLLECTION:C1488(<>colParseResult;$0)
+C_COLLECTION:C1488($colParseResult; $0)
 
 C_OBJECT:C1216($signal)
 C_BOOLEAN:C305($signaled)
 C_LONGINT:C283(<>winRef)
 
-<>colParseResult:=New collection:C1472
+$colParseResult:=New collection:C1472
 
 If (<>winRef#0)
 	$signal:=New signal:C1641
-	CALL FORM:C1391(<>winRef;"doParseGetTokensSum";$signal)
+	CALL FORM:C1391(<>winRef; "doParseGetTokensSum"; $signal)
 	$signaled:=$signal.wait()
+	If (Value type:C1509($signal.myresult)=Is collection:K8:32)
+		$colParseResult:=$signal.myresult
+	End if 
 End if 
 
-$0:=<>colParseResult
+$0:=$colParseResult
 
 // - EOF -

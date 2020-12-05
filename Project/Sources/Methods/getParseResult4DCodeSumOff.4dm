@@ -1,6 +1,6 @@
 //%attributes = {"shared":true}
 // PM: "getParseResult4DCodeSumOff" (new LV 14.09.2020, 09:30:00)
-// $0 - C_COLLECTION - parse result of 4Dcode
+// $0 - C_COLLECTION - parse result of 4Dcodes
 // Get for all kind of methods (Summary) the method datas
 // path, code, mod (methodPathName, methodSourceCode, modificationDateTime)
 // PLUS all tokenTypes which used from the method, 9 collections for 9 types:
@@ -15,15 +15,14 @@
 // - usedStr ("StringsInDoubleQuotes")
 // PLUS all callers of/for each projectMethod (Null/Collection)
 // Uses js: function parseGetTokens(src4dCode, typFilterList)
-// Last change: LV 14.09.2020, 09:30:00
+// Last change: LV 05.12.2020, 11:30:00
 
-C_COLLECTION:C1488(<>colParseResult;$0)
+C_COLLECTION:C1488($colParseResult; $0)
 
 C_OBJECT:C1216($config)
-C_LONGINT:C283($result)
 
 $config:=New object:C1471
-$config.url:=File:C1566(Get 4D folder:C485(Current resources folder:K5:16)+"HTML_Docs"+Folder separator:K24:12+"cm"+Folder separator:K24:12+"codemirror-5.54.0"+Folder separator:K24:12+"mp"+Folder separator:K24:12+"min4dRunParse.html";fk platform path:K87:2)
+$config.url:=File:C1566(Get 4D folder:C485(Current resources folder:K5:16)+"HTML_Docs"+Folder separator:K24:12+"cm"+Folder separator:K24:12+"codemirror-5.54.0"+Folder separator:K24:12+"mp"+Folder separator:K24:12+"min4dRunParse.html"; fk platform path:K87:2)
 $config.area:="oWebArea"
 $config.onEvent:=Formula:C1597(doParseGetTokensSumCallback)
 
@@ -51,14 +50,14 @@ $config.autoQuit:=True:C214
 // So conclusion, $4d object did NOT work in a offscreen area
 // and page reload inside offscreenArea is the only reason for let them keep alive
 
-<>colParseResult:=New collection:C1472
+$colParseResult:=New collection:C1472
 
-$result:=WA Run offscreen area:C1727($config)
+$colParseResult:=WA Run offscreen area:C1727($config)
 
 If ($config.timeoutreached)  // automatically returned in case of timeout
 	BEEP:C151
 End if 
 
-$0:=<>colParseResult
+$0:=$colParseResult
 
 // - EOF -

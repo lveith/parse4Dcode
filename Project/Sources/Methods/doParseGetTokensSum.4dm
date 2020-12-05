@@ -14,9 +14,10 @@
 // - usedStr ("StringsInDoubleQuotes")
 // PLUS all callers of/for each projectMethod (Null/Collection)
 // Uses js: function parseGetTokens(src4dCode, typFilterList)
-// Last change: LV 14.09.2020, 09:30:00
+// Last change: LV 05.12.2020, 11:30:00
 
-C_OBJECT:C1216($signal;$1)
+C_COLLECTION:C1488($colParseResult; $0)
+C_OBJECT:C1216($signal; $1)
 
 C_TEXT:C284($src4Dcode)
 C_LONGINT:C283($i)
@@ -24,10 +25,10 @@ C_DATE:C307($date)
 C_TIME:C306($time)
 C_TEXT:C284($namePM)
 C_OBJECT:C1216($objPMs)
-C_COLLECTION:C1488($colResultsSum;$colPMs)
+C_COLLECTION:C1488($colResultsSum; $colPMs)
 C_OBJECT:C1216($resultObj)
 
-ARRAY TEXT:C222($aPaths;0)
+ARRAY TEXT:C222($aPaths; 0)
 
 If (Count parameters:C259>0)
 	$signal:=$1
@@ -36,36 +37,36 @@ End if
 $colResultsSum:=New collection:C1472
 $objPMs:=New object:C1471
 
-METHOD GET PATHS:C1163(Path all objects:K72:16;$aPaths;*)
+METHOD GET PATHS:C1163(Path all objects:K72:16; $aPaths; *)
 
 //%R-
 
-For ($i;1;Size of array:C274($aPaths))
+For ($i; 1; Size of array:C274($aPaths))
 	
-	METHOD GET CODE:C1190($aPaths{$i};$src4Dcode;*)
+	METHOD GET CODE:C1190($aPaths{$i}; $src4Dcode; *)
 	
-	METHOD GET MODIFICATION DATE:C1170($aPaths{$i};$date;$time;*)
+	METHOD GET MODIFICATION DATE:C1170($aPaths{$i}; $date; $time; *)
 	
-	WA EXECUTE JAVASCRIPT FUNCTION:C1043(*;"oWebArea";"parseGetTokens";<>colParseResult;$src4Dcode;"")
+	WA EXECUTE JAVASCRIPT FUNCTION:C1043(*; "oWebArea"; "parseGetTokens"; $colParseResult; $src4Dcode; "")
 	
 	$resultObj:=New object:C1471
 	$resultObj.path:=$aPaths{$i}
 	$resultObj.code:=$src4Dcode
-	$resultObj.mod:=String:C10($date;ISO date:K1:8;$time)
+	$resultObj.mod:=String:C10($date; ISO date:K1:8; $time)
 	
-	$resultObj.usedPm:=<>colParseResult.query("typ='method-project'").distinct("src")
-	$resultObj.usedCmd:=<>colParseResult.query("typ='command'").distinct("src")  // 4D-Commands
-	$resultObj.usedCst:=<>colParseResult.query("typ='attribute'").distinct("src")  // attribute = 4D-Constants e.g. "ck diacritical"
-	$resultObj.usedVlc:=<>colParseResult.query("typ='variable-local'").distinct("src")
-	$resultObj.usedVip:=<>colParseResult.query("typ='variable-ip'").distinct("src")
-	$resultObj.usedBb:=<>colParseResult.query("typ='keyword blockBegin'").distinct("src")  // ['if','case of','for each','for','while','repeat','use','begin sql']
-	$resultObj.usedBm:=<>colParseResult.query("typ='keyword blockMiddle'").distinct("src")  // ['else']
-	$resultObj.usedBe:=<>colParseResult.query("typ='keyword blockEnd'").distinct("src")  // ['end if','end case','end for each','end for','end while','until','end use','end sql']
-	$resultObj.usedStr:=<>colParseResult.query("typ='string'").distinct("src")  // string/date/time = "stringInDoubleQuotes", !2010-09-13!, ?01:00:00?
+	$resultObj.usedPm:=$colParseResult.query("typ='method-project'").distinct("src")
+	$resultObj.usedCmd:=$colParseResult.query("typ='command'").distinct("src")  // 4D-Commands
+	$resultObj.usedCst:=$colParseResult.query("typ='attribute'").distinct("src")  // attribute = 4D-Constants e.g. "ck diacritical"
+	$resultObj.usedVlc:=$colParseResult.query("typ='variable-local'").distinct("src")
+	$resultObj.usedVip:=$colParseResult.query("typ='variable-ip'").distinct("src")
+	$resultObj.usedBb:=$colParseResult.query("typ='keyword blockBegin'").distinct("src")  // ['if','case of','for each','for','while','repeat','use','begin sql']
+	$resultObj.usedBm:=$colParseResult.query("typ='keyword blockMiddle'").distinct("src")  // ['else']
+	$resultObj.usedBe:=$colParseResult.query("typ='keyword blockEnd'").distinct("src")  // ['end if','end case','end for each','end for','end while','until','end use','end sql']
+	$resultObj.usedStr:=$colParseResult.query("typ='string'").distinct("src")  // string/date/time = "stringInDoubleQuotes", !2010-09-13!, ?01:00:00?
 	
 	$colResultsSum.push($resultObj)
 	
-	For each ($namePM;$resultObj.usedPm)
+	For each ($namePM; $resultObj.usedPm)
 		If ($objPMs[$namePM]=Null:C1517)
 			$objPMs[$namePM]:=New collection:C1472($resultObj.path)
 		Else 
@@ -78,16 +79,23 @@ For ($i;1;Size of array:C274($aPaths))
 End for 
 
 $colPMs:=$colResultsSum.query("path#'[@'")
-For each ($resultObj;$colPMs)
+For each ($resultObj; $colPMs)
 	$resultObj.callers:=$objPMs[$resultObj.path]
 End for each 
 
 //%R+
 
-<>colParseResult:=$colResultsSum
+$colParseResult:=$colResultsSum
 
-If (Count parameters:C259>0)
+If (Count parameters:C259>0)  // use signal to return result
+	Use ($signal)
+		$signal.myresult:=$colParseResult.copy(ck shared:K85:29; $signal)  //return the result
+	End use 
 	$signal.trigger()  // work is finished
+	
+Else 
+	$0:=$colParseResult  //return the result
+	
 End if 
 
 // - EOF -
