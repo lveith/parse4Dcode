@@ -7,7 +7,7 @@ parse4Dcode (get only idented tags inner the methods codes without any UI)
 Get results from any single 4D-Code-Source.<br>
 Uses javascript in a hidden webarea/form/window just for to can execute javascript commands.
 This needs a start and kill of the window session ([see examples in md-docu](https://github.com/lveith/parse4Dcode/blob/main/Documentation/Methods/getParseResult4DCode.md)).
-Normally you start one time, using it multible times and just when no longer needed you can kill it.<br>
+Normally you start one time, using it multiple times and just when no longer needed you can kill it.<br>
 *Is still until today generally not thread-safe designed.*
 
 ## [Component method `getParseResult4DCodeSumOff`](https://github.com/lveith/parse4Dcode/blob/main/Documentation/Methods/getParseResult4DCodeSumOff.md)
